@@ -15,10 +15,10 @@ function SOFAstart(flags)
 % See the License for the specific language governing  permissions and limitations under the License.
 
 %% Input parameters
-verbose = 1;
+verbose = 0;
 if nargin>0
-	if strcmp(lower(flags),'silent'), verbose=0; end;
-	if isnumeric(flags), if flags==0, verbose=0; end; end;
+	if strcmp(lower(flags),'debug'), verbose=1; end;
+	if isnumeric(flags), if flags==1, verbose=1; end; end;
 end
 
 
