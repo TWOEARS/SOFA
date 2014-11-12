@@ -1,4 +1,4 @@
-function Obj=SOFAconvertSURREY2SOFA(directory, room)
+function Obj=SOFAconvertSURREY2SOFA(directory)
 %% Get an empy conventions structure
 Obj = SOFAgetConventions('SingleRoomDRIR');
 
@@ -31,35 +31,10 @@ for idx=find(selector)
   Obj.Data.SamplingRate = A(3)*1000;
 end
 
-%% Fill with attributes
-Obj.GLOBAL_ListenerShortName = 'Cortex';
-Obj.GLOBAL_History='Converted from Surrey .wav files';
-%Obj.GLOBAL_Comment = irs.description;
-Obj.GLOBAL_License = 'Unknown, Restrictive';
-Obj.GLOBAL_ApplicationName = 'BRIR from University of Surrey';
-Obj.GLOBAL_ApplicationVersion = '1.0';
-Obj.GLOBAL_AuthorContact = '';
-Obj.GLOBAL_References = [''];
-Obj.GLOBAL_Origin = 'University of Surrey';
-Obj.GLOBAL_Organization = 'Institute of Sound Recording';
-Obj.GLOBAL_DatabaseName = 'Surrey Database';
-Obj.GLOBAL_Title = 'Binaural Impulse Response Measurements';
-Obj.GLOBAL_ListenerDescription = 'Cortex Instruments Mk.2 HATS';
-Obj.GLOBAL_ReceiverDescription = '';
-Obj.GLOBAL_SourceDescription = 'Genelec 8020A';
-
-Obj.GLOBAL_RoomType = ['reverberant, RT60=' num2str(A(1)/100,'%2.2f'), 's'];
-
-if exist('room','var')
-  Obj.GLOBAL_RoomDescription = room;
-else
-  Obj.GLOBAL_RoomDescription = '';
-end
-
 %% Fill the mandatory variables
 % SingleRoomDRIR
 % === Source ===
-Obj.SourceView = Obj.SourcePosition;
+Obj.SourceView = -Obj.SourcePosition;
 Obj.SourcePosition = Obj.SourcePosition.*1.5;
 Obj.SourceUp = [0 0 1];
 
@@ -68,6 +43,25 @@ Obj.ListenerView = [0,0,0];
 Obj.ListenerUp = [0 0 1];
 % Receiver position for a dummy head (imported from SimpleFreeFieldHRIR)
 Obj.ReceiverPosition = [0,-0.09,0; 0,0.09,0];
+
+%% Fill with attributes
+Obj.GLOBAL_ListenerShortName = 'Cortex';
+Obj.GLOBAL_History='Converted from Surrey .wav files';
+%Obj.GLOBAL_Comment = irs.description;
+Obj.GLOBAL_License = 'Unknown, Restrictive';
+Obj.GLOBAL_ApplicationName = 'BRIR from University of Surrey';
+Obj.GLOBAL_ApplicationVersion = '1.0';
+Obj.GLOBAL_AuthorContact = 'c.hummersone@surrey.ac.uk';
+Obj.GLOBAL_References = [''];
+Obj.GLOBAL_Origin = 'University of Surrey';
+Obj.GLOBAL_Organization = 'Institute of Sound Recording';
+Obj.GLOBAL_DatabaseName = 'Surrey Database';
+Obj.GLOBAL_Title = 'Binaural Impulse Response Measurements';
+Obj.GLOBAL_ListenerDescription = 'Cortex Instruments Mk.2 HATS';
+Obj.GLOBAL_ReceiverDescription = '';
+Obj.GLOBAL_SourceDescription = 'Genelec 8020A';
+Obj.GLOBAL_RoomType = 'reverberant';
+Obj.GLOBAL_RoomDescription = ['RT60(BS EN ISO 3382)= ', num2str(A(1)/100, '%2.2f'), 's'];
 
 %% Update dimensions
 Obj=SOFAupdateDimensions(Obj);
