@@ -16,6 +16,8 @@ function [Obj,modified] = SOFAupgradeConventions(Obj)
 
 modified=0;
 
+%% Upgrade specific to a SOFA version
+
 switch Obj.GLOBAL_Version,
   case '0.3'
     modified=1;
@@ -110,4 +112,61 @@ switch Obj.GLOBAL_Version,
     Obj.GLOBAL_Version='0.6';
     modified=1;
     warning('SOFA:upgrade','SOFA 0.5 upgraded to 0.6');
+  case '0.6'
+    X=SOFAgetConventions(Obj.GLOBAL_SOFAConventions);
+    if ~isempty(X),
+      Obj.GLOBAL_History=SOFAappendText(Obj,'GLOBAL_History','Upgraded from SOFA 0.6');
+      Obj.GLOBAL_Version='1.0';
+      Obj.GLOBAL_SOFAConventionsVersion = X.GLOBAL_SOFAConventionsVersion;
+        % replace aliases by correct unit names
+      U=SOFAdefinitions('units');
+      Uf=fieldnames(U);
+      f=fieldnames(Obj);
+      for jj=1:length(f)
+        if length(f{jj}) > 6
+          if strcmp(f{jj}(end-5:end),'_Units')
+            for ii=1:length(Uf) % _Units found, check for alias
+              Obj.(f{jj})=regexprep(Obj.(f{jj}), U.(Uf{ii}), Uf{ii}, 'ignorecase');
+            end
+          end
+        end
+      end
+      f=fieldnames(Obj.Data);
+      for jj=1:length(f)
+        if length(f{jj}) > 6
+          if strcmp(f{jj}(end-5:end),'_Units')
+            for ii=1:length(Uf) % _Units found, check for alias
+              Obj.Data.(f{jj})=regexprep(Obj.Data.(f{jj}), U.(Uf{ii}), Uf{ii}, 'ignorecase');
+            end
+          end
+        end
+      end
+      modified=1;
+      warning('SOFA:upgrade','SOFA 0.6 upgraded to 1.0');    
+    else
+      warning('SOFA:upgrade','Unknown conventions');
+    end
+end
+
+%% Upgrade specific to conventions
+if ~modified
+  switch Obj.GLOBAL_SOFAConventions
+    case 'MultiSpeakerBRIR'
+      if strcmp(Obj.GLOBAL_SOFAConventionsVersion,'0.1');
+          % upgrade to 0.2
+        Obj.GLOBAL_DataType='FIRE';
+        Obj.GLOBAL_SOFAConventionsVersion='0.2';
+        %Obj.Data.Delay = 
+        if strcmp(Obj.API.Dimensions.Data.Delay,'IR')
+          Obj.API.Dimensions.Data.Delay='IRE'; 
+          Obj.Data.Delay=repmat(Obj.Data.Delay,[1 1 size(Obj.EmitterPosition,1)]);
+        end
+        if strcmp(Obj.API.Dimensions.Data.Delay,'MR')
+          Obj.API.Dimensions.Data.Delay='MRE'; 
+          Obj.Data.Delay=repmat(Obj.Data.Delay,[1 1 size(Obj.EmitterPosition,1)]);
+        end
+        modified=1;
+        warning('SOFA:upgrade','Conventions MultiSpeakerBRIR 0.1 upgraded to 0.2');
+      end
+  end
 end

@@ -15,6 +15,10 @@ function Obj = SOFAaddVariable(Obj,Name,Dim,Value)
 %   Note that the private variables will be not stored in SOFA files and
 %   arbitrary dimensions are allowed.
 %
+%		Note that adding variables to Data is not supported and should not be used
+%		as it might be confusing having user-defined variables in a Data structure. 
+%		Consider adding a variable at the global level instead, which would be more
+%		clear for others.
 
 % 9.8.2014: dimension is added if not previously found.
 %
@@ -35,13 +39,21 @@ switch Dim
       case {'API','PRIVATE','GLOBAL'}
         error('This variable name is reserved.');
       otherwise
-      Obj.(Name)=Value;
-      Obj.API.Dimensions.(Name)=Dim;
-      dims=SOFAdefinitions('dimensions');
-      for ii=1:length(Dim)  
-        if ~isfield(dims,Dim(ii))
-          error('Dimension not supported.');
+        if strncmp(Name,'Data.',length('Data.'))         
+          % add variable to Data
+          Name=Name(length('Data.')+1:end);
+          Obj.Data.(Name)=Value;
+          Obj.API.Dimensions.Data.(Name)=Dim;
+        else
+          % add variable to root
+          Obj.(Name)=Value;
+          Obj.API.Dimensions.(Name)=Dim;
         end
-      end
+        dims=SOFAdefinitions('dimensions');
+        for ii=1:length(Dim)  
+          if ~isfield(dims,Dim(ii))
+            error('Dimension not supported.');
+          end
+        end
     end
 end

@@ -17,8 +17,9 @@ function SOFAstart(flags)
 %% Input parameters
 verbose = 0;
 if nargin>0
-	if strcmp(lower(flags),'debug'), verbose=1; end;
-	if isnumeric(flags), if flags==1, verbose=1; end; end;
+	if strcmp(lower(flags),'silent'), verbose=0; end;
+	if strcmp(lower(flags),'short'), verbose=1; end;
+	if isnumeric(flags), if flags==0, verbose=0; end; end;
 end
 
 
@@ -28,13 +29,13 @@ if exist('OCTAVE_VERSION','builtin')
   if compare_versions(OCTAVE_VERSION,'3.6.0','<=')   % check if the octave version is high enough
     error('You need Octave >=3.6.0 to work with SOFA.');
   end  
-  if ~which('netcdf') % check if octcdf is installed
-    error('You have to install the octcdf package in Octave to work with SOFA.');
+  if ~which('test_netcdf') % check if octcdf is installed
+    error('You have to install the netcdf package in Octave to work with SOFA.');
   end
 else
     % We're in Matlab
   if verLessThan('matlab','8')
-    warning('SOFA for Matlab version <= 8 (2012b) not tested. Use on your risk.');
+    warning('SOFA:start','SOFA for Matlab version <= 8 (2012b) not tested. Use on your risk.');
   end
 end
 
@@ -53,22 +54,14 @@ if exist('addpath','builtin')
   addpath([basepath f 'coordinates']);
   addpath([basepath f 'converters']);
   addpath([basepath f 'demos']);
-  if exist('OCTAVE_VERSION','builtin')
-    addpath([basepath f 'octave']);
-  else
-    addpath([basepath f 'matlab']);
-  end
+  addpath([basepath f 'netcdf']);
 else
   path(path,basepath);
   path(path,[basepath f 'helper']);
   path(path,[basepath f 'coordinates']);
   path(path,[basepath f 'converters']);
   path(path,[basepath f 'demos']);
-  if exist('OCTAVE_VERSION','builtin')
-    path(path,[basepath f 'octave']);
-  else
-    path(path,[basepath f 'matlab']);
-  end
+  path(path,[basepath f 'netcdf']);
 end
 
 % Provide SOFA conventions
@@ -78,14 +71,16 @@ convs=SOFAgetConventions;
 %% Display general informations
 if verbose
     disp(['SOFA Matlab/Octave API version ' SOFAgetVersion '. Copyright 2013 Acoustics Research Institute (piotr@majdak.com).']);
-    disp(['This API implements SOFA version ' SOFAgetVersion('SOFA') '.']);
-    text=['Available SOFA Conventions: ' convs{1}];
-    for ii=2:length(convs)
-        text=[text ', ' convs{ii}];
-    end
-    disp(text);
-    disp(['SOFAdbPath (local HRTF database): ' SOFAdbPath ]);
-    disp(['SOFAdbURL (internet repository): ' SOFAdbURL]);
+		if verbose==2,
+			disp(['This API implements SOFA version ' SOFAgetVersion('SOFA') '.']);
+			text=['Available SOFA Conventions: ' convs{1}];
+			for ii=2:length(convs)
+					text=[text ', ' convs{ii}];
+			end
+			disp(text);
+			disp(['SOFAdbPath (local HRTF database): ' SOFAdbPath ]);
+			disp(['SOFAdbURL (internet repository): ' SOFAdbURL]);
+		end
 end
 
 % FIXME: I would check only if the URL is available in the function where it is

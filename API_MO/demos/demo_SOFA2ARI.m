@@ -10,16 +10,15 @@
 
 %% Define parameters
 % Subject index of the file to convert
-if ~exist('subjectID','var'); subjectID='NH4'; end;
+subjectID='NH4';
 % File name of the ARI file
-if ~exist('ARIfile','var'); ARIfile='hrtf_M_dtf 256'; end;
+ARIfile='hrtf_M_dtf 256'; 
 % Data compression (0..uncompressed, 9..most compressed)
 compression=1; % results in a nice compression within a reasonable processing time
 
 
 %% Load ARI file
-f=filesep;
-ARIfn=[SOFAdbPath f 'ARI' f subjectID f ARIfile '.mat'];
+ARIfn=fullfile(fileparts(SOFAdbPath), 'ARI', subjectID, [ARIfile '.mat']);
 disp(['Loading: ' ARIfn]);
 ARI=load(ARIfn);
 
@@ -34,6 +33,6 @@ disp('Converting back to ARI (hM, meta, stimPar)...');
 %% Calculate the differences
 disp(['RMS difference between the new hM and the original ARI.hM: ' num2str(sum(sum(sqrt(mean((hM-ARI.hM).^2)))))]);
 if sum(sum(sqrt(mean((hM-ARI.hM).^2))))>1, error('hM and ARI.hM not identic'); end
-disp(['RMS difference between the new meta.pos and the original ARI.meta.pos: ' num2str(sum(sqrt(mean((meta.pos-ARI.meta.pos).^2))))]);
-if sum(sqrt(mean((meta.pos-ARI.meta.pos).^2)))>1, error('meta.pos and ARI.meta.pos not identic'); end
+disp(['RMS difference between the new meta.pos and the original ARI.meta.pos: ' num2str(sum(sqrt(mean((meta.pos(:,1:2)-ARI.meta.pos(:,1:2)).^2))))]);
+if sum(sqrt(mean((meta.pos(:,1:2)-ARI.meta.pos(:,1:2)).^2)))>1, error('meta.pos and ARI.meta.pos not identic'); end
 

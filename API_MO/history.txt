@@ -11,7 +11,36 @@
 
 *** DEVELOPMENT STATUS ***
 
-*** v0.4.4 
+*** v1.0.0 (3.6.2015)
+- 'short' flag added to SOFAstart in order to show only a short header on start-up.
+- warnings are function-specific now and can be specifically enabled/disabled.
+
+*** v0.9.1 (13.5.2015) 
+- 0.9.1 is the internal numbering for the release version 1.0 RC2
+- SimpleFreeFieldSOS added
+- SOFAexpand and SOFAaddVariable handle Data. variables now
+- SOFAplotHRTF supports SimpleFreeFielsSOS now
+
+*** v0.9.0 (12.5.2015) 
+
+- 0.9.0 is the internal numbering for the release version 1.0 RC1
+- update of all conventions to SOFA 1.0
+- changes according to the AES212-standard implemented
+- Octave: upgraded to a new netcdf-package: http://modb.oce.ulg.ac.be/mediawiki/index.php/Octave-netcdf
+- Matlab/Octave: NETCDF* functions merged for both systems (thx to Hagen Wierstorf)
+- HRTFs directory: database handling improved: 
+  - SOFAdbPath mirrors http://sofacoustics.org/data now. 
+	- Warning: directory structure of HRTFs/SOFA changed! 
+	- all SOFA files created by demo_ will be saved in sofa_api_mo_test 
+	- all demo_ files which use SOFA files will be automatically downloaded from sofacoustics.org
+- clean up of comments
+- SOFAcalculateAPV: reimplemented
+- horsph and sph2hor: bug fixes
+- directory CDL deleted (had historical relevance only)
+- SOFAdefinitions: flag 'units' added for unit aliases.
+- SOFAgetConventions: returns empty vector if conventions not supported
+
+*** v0.4.4 (until 20.4.2015) unreleased
 
 *** v0.4.3 (5.6.2014) by Piotr Majdak
 - fix: annoying bug in SOFAupgradeConventions
