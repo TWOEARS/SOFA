@@ -1,5 +1,5 @@
-SOFA - Spatially Oriented Format for Acoustics
-==============================================
+SOFA - Matlab/Octave API
+========================
 
 SOFA is a file format for reading, saving, and describing spatially
 oriented data of acoustic systems.
@@ -27,8 +27,6 @@ this site.
 
 Usage
 =====
-
-## Matlab/Octave API
 
 In order to use SOFA with Matlab or Octave you have to add its `API_MO` folder
 to your paths. After that you can play around with your acoustic measurements
