@@ -175,6 +175,16 @@ else
                 warning('SOFA:load',['Data.' field ' was missing, set to default']);
             end
         end
+        
+        % before we update dimensions, conventions must be upgraded
+        % ----- Ensure backwards compatibility -----
+        % TODO: is the while loop necessary, or could be handled just by calling
+        % SOFAupgradeConventions(Obj) once?
+        modified = 1;
+        while modified
+            [Obj,modified] = SOFAupgradeConventions(Obj);
+        end
+        
         Obj = SOFAupdateDimensions(Obj);
     end
 
