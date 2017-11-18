@@ -174,7 +174,7 @@ if ~modified
             end
         end
         modified=1;
-        warning('SOFA:upgrade','Conventions MultiSpeakerBRIR 0.1 upgraded to 0.2');
+        warning('SOFA:upgrade','Conventions MultiSpeakerBRIR 0.1 upgraded to 0.3');
       end
   end
 end
